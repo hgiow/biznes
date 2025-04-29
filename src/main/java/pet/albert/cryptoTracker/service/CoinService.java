@@ -10,6 +10,7 @@ import pet.albert.cryptoTracker.entity.Coin;
 import pet.albert.cryptoTracker.repository.CoinRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class CoinService {
@@ -22,7 +23,11 @@ public class CoinService {
         this.coinRepository = coinRepository;
     }
 
-    public Coin fetchCoinPrice(String coinID){
+    public Coin fetchCoinPrice(String coinID) throws IOException {
+
+        if(coinID == null ||  coinID.trim().isEmpty()){
+            throw new IllegalArgumentException("Coin ID cannot be empty");
+        }
 
         String url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=" + coinID;
         Request request = new Request.Builder().url(url).build();
@@ -30,7 +35,9 @@ public class CoinService {
         try (Response response = client.newCall(request).execute()) {
 
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
             JsonNode coinData = mapper.readTree(response.body().string());
+
             if (coinData.isEmpty()) throw new IOException("Coin not found");
 
             Coin coin = new Coin();
@@ -41,11 +48,11 @@ public class CoinService {
 
             return coinRepository.save(coin);
 
-        } catch (IOException e) {
-            System.err.println("Error fetching coin price: " + e.getMessage());
         }
+    }
 
-        return null;
+    public List<Coin> getAllCoins() {
+        return coinRepository.findAll();
     }
 }
 

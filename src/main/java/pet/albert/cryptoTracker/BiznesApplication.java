@@ -13,11 +13,4 @@ public class BiznesApplication {
         SpringApplication.run(BiznesApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner run(CoinService coinService) {
-        return args -> {
-            var coin = coinService.fetchCoinPrice("bitcoin");
-            System.out.println("Saved coin: " + coin.getName() + ", Price: $" + coin.getPrice());
-        };
-    }
 }
