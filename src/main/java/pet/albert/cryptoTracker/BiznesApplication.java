@@ -1,6 +1,6 @@
-package com.example.biznes;
+package pet.albert.cryptoTracker;
 
-import com.example.biznes.service.CoinService;
+import pet.albert.cryptoTracker.service.CoinService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,8 @@ public class BiznesApplication {
     @Bean
     CommandLineRunner run(CoinService coinService) {
         return args -> {
-            coinService.FetchCoinPrice("bitcoin");
+            var coin = coinService.fetchCoinPrice("bitcoin");
+            System.out.println("Saved coin: " + coin.getName() + ", Price: $" + coin.getPrice());
         };
     }
 }
