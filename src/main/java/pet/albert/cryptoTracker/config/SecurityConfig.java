@@ -19,10 +19,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/coins", "/api/coins/latest").hasRole("USER")
+
+                        .requestMatchers("/api/coins/**").hasRole("USER")
                         .requestMatchers("/api/coins/by-id").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -42,7 +42,7 @@ public class SecurityConfig {
         UserDetails admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder().encode("adminpass"))
-                .roles("ADMIN")
+                .roles("ADMIN", "USER")
                 .build();
 
         return new InMemoryUserDetailsManager(user, admin);
