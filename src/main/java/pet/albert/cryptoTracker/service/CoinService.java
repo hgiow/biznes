@@ -54,6 +54,10 @@ public class CoinService {
     public List<Coin> getAllCoins() {
         return coinRepository.findAll();
     }
+
+    public List<Coin> getCoinsById(String coinId) {
+        return coinRepository.findByCoinId(coinId);
+    }
 }
 
 

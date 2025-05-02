@@ -22,11 +22,12 @@ public class CoinController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getCoin(@RequestParam(required = false) String coinID) {
-        try {
-            if (coinID != null && !coinID.trim().isEmpty()) {
+    public ResponseEntity<?> getCoin(@RequestParam(required = false) String coinId) {
 
-                Coin coin = coinService.fetchCoinPrice(coinID);
+        try {
+            if (coinId != null && !coinId.trim().isEmpty()) {
+
+                Coin coin = coinService.fetchCoinPrice(coinId);
                 return ResponseEntity.ok(coin);
 
             } else {
@@ -39,5 +40,14 @@ public class CoinController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(400).body("Invalid coinId: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/by-id")
+    public ResponseEntity<List<Coin>> getCoinsById(@RequestParam String coinId) {
+        List<Coin> coins = coinService.getCoinsById(coinId);
+        if (coins.isEmpty()) {
+            return ResponseEntity.status(404).body(null);
+        }
+        return ResponseEntity.ok(coins);
     }
 }
